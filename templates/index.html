@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Last updates{% endblock %}
+{% block header %}Last updates{% endblock %}
+{% block content %}
+
+    {% for post in posts %}
+    <h3>
+        Author: {{ post.author }}, Date of publication: {{ post.pub_date|date:"d M Y" }}
+    </h3>
+    <p>{{ post.text|linebreaksbr }}</p>
+    {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+
+{% endblock %}
