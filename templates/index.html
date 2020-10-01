@@ -5,7 +5,7 @@
 
     {% for post in posts %}
     <h3>
-        Author: {{ post.author }}, Date of publication: {{ post.pub_date|date:"d M Y" }}
+        Group:{{post.group.title}} Author: {{ post.author }}, Date of publication:{{ post.pub_date|date:"d M Y" }}
     </h3>
     <p>{{ post.text|linebreaksbr }}</p>
     {% if not forloop.last %}<hr>{% endif %}

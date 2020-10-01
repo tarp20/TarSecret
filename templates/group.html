@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}community posts{{group}}{% endblock %}
+{% block header %}{{group}}{% endblock %}
+
+{% block content %}
+
+ <p>{{group.description}}</p>
+{% for post in posts %}
+<h3>
+    Author: {{post.author}},
+    Publication Date : {{post.pub_date|date:"d M Y"}}
+</h3>
+<p>{{post.text|linebreaksbr }}</p>
+{% endfor %}
+
+{% endblock %}
