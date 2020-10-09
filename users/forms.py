@@ -23,4 +23,7 @@ class ContactForm(forms.Form):
             raise forms.ValidationError("You should definitely thank us!")
         return data
 
+class PostForm(forms.Form):
+    group = forms.CharField(required=False)
+    text = forms.CharField(widget=forms.Textarea,required=True)
 
