@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django import forms
+from posts.models import Post
+from django.forms import ModelForm
 
 User = get_user_model()
 
@@ -23,7 +25,9 @@ class ContactForm(forms.Form):
             raise forms.ValidationError("You should definitely thank us!")
         return data
 
-class PostForm(forms.Form):
-    group = forms.CharField(required=False)
-    text = forms.CharField(widget=forms.Textarea,required=True)
+class PostForm(ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ['group','text']
 

@@ -1,7 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Sign Up{% endblock %}
+{% block title %}New Post{% endblock %}
 {% block content %}
 {% load user_filters %}
+<form method="POST" action="{% url 'new_post' %}">
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <div class="col-md-6 offset-md-4">
+        <button type="submit" class="btn btn-primary">
+            Add Post
+        </button>
+    </div>
+</form>
 
 
 
