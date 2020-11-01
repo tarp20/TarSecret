@@ -3,12 +3,15 @@
 {% block header %}Last updates{% endblock %}
 {% block content %}
 
-    {% for post in posts %}
+    {% for post in page %}
     <h3>
         Group:{{post.group.title}} Author: {{ post.author }}, Date of publication:{{ post.pub_date|date:"d M Y" }}
     </h3>
     <p>{{ post.text|linebreaksbr }}</p>
     {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
-
-{% endblock %}
+    {% if page.has_other_pages  %}
+    {% include "paginator.html" with items=page paginator=paginator %}
+    {% endif %}
+    ****
+    {% endblock %}
