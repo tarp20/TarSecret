@@ -4,6 +4,10 @@ from django.views.generic import CreateView
 from users.forms import CreationForm, PostForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+
+from django.http import HttpResponse
+
+
 from django.http import HttpResponse
 
 
@@ -25,11 +29,24 @@ def index(request):
 def group_post(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all()
+
+
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
     contex = {'group': group, 'page': page, 'paginator': paginator}
+
+
+    paginator = Paginator(posts,5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    
+    contex = {'group': group, 'page':page,'paginator':paginator}
+
+
+
+
     return render(request, "group.html", contex)
 
 
@@ -75,6 +92,7 @@ def post_view(request, username, post_id):
 
 @login_required(login_url="/auth/login/")
 def post_edit(request, username, post_id):
+
     profile = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, pk=post_id, author=profile)
     if request.user != profile:
@@ -101,3 +119,18 @@ def page_not_found(request, exception):
 
 def server_error(request):
     return render(request, "mics/500.html", status=500)
+
+
+    form = PostForm(instance =Post.objects.get(id =post_id))
+
+    if username != request.user.username:
+        HttpResponse("ERROR")
+
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=Post.objects.get(id=post_id))
+    if form.is_valid():
+        form.save()
+        return redirect('index')
+
+    return render(request, 'edit_post.html', {'form': form})
+
