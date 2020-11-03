@@ -6,7 +6,7 @@
 {% block content %}
 
  <p>{{group.description}}</p>
-<<<<<<< HEAD
+
  {% for post in page %}
  <div class="card mb-3 mt-1 shadow-sm">
          <div class="card-body">
@@ -36,14 +36,14 @@
 </div>
 
 
-=======
+
 {% for post in page %}
 <h3>
     Author: {{post.author}},
     Publication Date : {{post.pub_date|date:"d M Y"}}
 </h3>
 <p>{{post.text|linebreaksbr }}</p>
->>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
+
 {% endfor %}
 {% if page.has_other_pages  %}
     {% include "paginator.html" with items=page paginator=paginator %}

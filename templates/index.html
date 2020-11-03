@@ -4,7 +4,7 @@
 {% block content %}
 
     {% for post in page %}
-<<<<<<< HEAD
+
     <div class="card mb-3 mt-1 shadow-sm">
             <div class="card-body">
                 
@@ -35,14 +35,14 @@
         </div>
 </div>
 {% endfor %}
-=======
+
     <h3>
         Group:{{post.group.title}} Author: {{ post.author }}, Date of publication:{{ post.pub_date|date:"d M Y" }}
     </h3>
     <p>{{ post.text|linebreaksbr }}</p>
     {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
->>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
+
     {% if page.has_other_pages  %}
     {% include "paginator.html" with items=page paginator=paginator %}
     {% endif %}

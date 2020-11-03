@@ -4,10 +4,8 @@ from django.views.generic import CreateView
 from users.forms import CreationForm, PostForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-<<<<<<< HEAD
+
 from django.http import HttpResponse
-=======
->>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
 
 
 # Create your views here.
@@ -28,19 +26,22 @@ def index(request):
 def group_post(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all()
-<<<<<<< HEAD
+
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
     contex = {'group': group, 'page': page, 'paginator': paginator}
-=======
+
+
     paginator = Paginator(posts,5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     
     contex = {'group': group, 'page':page,'paginator':paginator}
->>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
+
+
+
     return render(request, "group.html", contex)
 
 
