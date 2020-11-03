@@ -1,31 +1,57 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Group
+from .models import Post, Group, User
 from django.views.generic import CreateView
 from users.forms import CreationForm, PostForm
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+<<<<<<< HEAD
+from django.http import HttpResponse
+=======
+>>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
 
 
 # Create your views here.
-
+@login_required(login_url="/auth/login/")
 def index(request):
-    latest = Post.objects.order_by('-pub_date')[:11]
-    return render(request, 'index.html', {'posts': latest})
+    latest = Post.objects.order_by('-pub_date').all()
+    paginator = Paginator(latest, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        'index.html',
+        {'page': page, 'paginator': paginator}
+    )
 
 
+@login_required(login_url="/auth/login/")
 def group_post(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.all()[:12]
-    contex = {'group': group, 'posts': posts}
+    posts = group.posts.all()
+<<<<<<< HEAD
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    contex = {'group': group, 'page': page, 'paginator': paginator}
+=======
+    paginator = Paginator(posts,5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    
+    contex = {'group': group, 'page':page,'paginator':paginator}
+>>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
     return render(request, "group.html", contex)
 
 
+@login_required(login_url="/auth/login/")
 class PostNew(CreateView):
     form_class = PostForm
     success_url = '/'
     template_name = 'new_post.html'
 
 
-@login_required()
+@login_required(login_url="/auth/login/")
 def new_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -38,3 +64,38 @@ def new_post(request):
 
     form = PostForm()
     return render(request, 'new_post.html', {'form': form})
+
+
+@login_required(login_url="/auth/login/")
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = user.posts.all()
+    paginator = Paginator(posts,5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    count = len(posts)
+    context = {'page': page, 'user': user, 'count': count,'paginator':paginator}
+    return render(request, 'profile.html', context)
+
+
+@login_required(login_url="/auth/login/")
+def post_view(request, username, post_id):
+
+    return render(request, 'post.html', {})
+
+
+@login_required(login_url="/auth/login/")
+def post_edit(request, username, post_id):
+
+    form = PostForm(instance =Post.objects.get(id =post_id))
+
+    if username != request.user.username:
+        HttpResponse("ERROR")
+
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=Post.objects.get(id=post_id))
+    if form.is_valid():
+        form.save()
+        return redirect('index')
+
+    return render(request, 'edit_post.html', {'form': form})

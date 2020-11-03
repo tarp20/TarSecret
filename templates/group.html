@@ -6,12 +6,47 @@
 {% block content %}
 
  <p>{{group.description}}</p>
-{% for post in posts %}
+<<<<<<< HEAD
+ {% for post in page %}
+ <div class="card mb-3 mt-1 shadow-sm">
+         <div class="card-body">
+             
+                 <p class="card-text">
+                     <!-- Ссылка на страницу автора в атрибуте href; username автора в тексте ссылки -->
+                         <a href="{% url 'profile' post.author %}"><strong class="d-block text-gray-dark">@{{post.author}}</strong></a>
+                         {{post.group}}
+                         <br><br>
+                         {{post.text}}
+                        
+                    
+                 </p>
+                 <div class="d-flex justify-content-between align-items-center">
+                     <div class="btn-group ">
+                             <!-- Ссылка на страницу записи в атрибуте href-->
+                             <a class="btn btn-sm text-muted" href="" role="button">Comment</a>
+                             <!-- Ссылка на редактирование, показывается только автору записи -->
+                             {% if user == post.author %}
+                                <a class="btn btn-sm text-muted" href="" role="request">Edit</a>
+                                {% endif %}
+                     </div>
+                     <!-- Дата публикации  -->
+                     <small class="text-muted">{{post.pub_date}}</small>
+             </div>
+     </div>
+</div>
+
+
+=======
+{% for post in page %}
 <h3>
     Author: {{post.author}},
     Publication Date : {{post.pub_date|date:"d M Y"}}
 </h3>
 <p>{{post.text|linebreaksbr }}</p>
+>>>>>>> 0a03c542ae61f67b1e1e687a4493264b1135bc78
 {% endfor %}
-
+{% if page.has_other_pages  %}
+    {% include "paginator.html" with items=page paginator=paginator %}
+    {% endif %}
+    ****
 {% endblock %}
