@@ -16,12 +16,13 @@ class Group(models.Model):
 
 
 class Post(models.Model):
-    text = models.TextField(help_text="Your Text", verbose_name="Text")
+    text = models.TextField( verbose_name="Text")
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='posts', null=True)
+        User, on_delete=models.CASCADE, related_name='posts')
     group = models.ForeignKey(
         Group, on_delete=models.SET_NULL, related_name='posts', blank=True, null=True)
+    image = models.ImageField(upload_to='posts/', blank=True, null=True)
 
     class Meta:
         ordering = ['-pub_date']
