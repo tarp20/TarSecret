@@ -22,6 +22,9 @@ def user_contact(request):
     return render(request, 'contact.html', {'form': form})
 
 
+    
+
+
 
 
 
