@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Last updates{% endblock %}
+{% block header %}Last updates{% endblock %}
+{% block content %}
+
+{% if user.is_authenticated %} 
+<div class="card my-4">
+<form
+    action=""
+    method="POST">
+    {% csrf_token %}
+    <h5 class="card-header">Add Comment:</h5>
+    <div class="card-body">
+    <form>
+        <div class="form-group">
+        {{ form.text }}
+        </div>
+        <button type="submit" class="btn btn-primary">Comment</button>
+    </form>
+    </div>
+</form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+

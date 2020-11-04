@@ -41,23 +41,43 @@
                                <img class="card-img" src="{{ im.url }}">
                                {% endthumbnail %}
                                 <p class="card-text">
-                                    <a href=""><strong class="d-block text-gray-dark">@{{user.username}}</strong></a>
+                                    <a href="{% url 'profile' post.author %}"><strong class="d-block text-gray-dark">@{{user.username}}</strong></a>
                                     <a href="{% url 'group' post.group.slug %}"{{post.group}}>{{post.group}}</a>
                                     <br><br>
                                     {{post.text}}
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group ">
-                                            {% if user == post.author %}
-                                            <a class="btn btn-sm text-muted" href="{% url 'post_edit' post.author post.pk %}" role="request">Edit</a>
-                                            {% endif %}
+                                                <a class="btn btn-sm text-muted" href="{% url 'add_comment' post.author post.pk %}" role="button">Comment</a>
+                                
+                                                {% if request.user == post.author %}
+                                                <a class="btn btn-sm text-muted" href="{% url 'post_edit' post.author post.pk %}" role="request">Edit</a>
+                                                {% endif %}
                                         </div>
                                         <!-- Дата публикации  -->
                                         <small class="text-muted">{{post.pub_date | date:'d b H:i' }}</small>
                                 </div>
+                                -------------------------------------------------
+                                <h2>Comments:</h2>
+                                {% for item in comments %}
+<div class="media mb-4">
+<div class="media-body">
+    <h5 class="mt-0">
+    <a
+        href="{% url 'profile' item.author.username %}"
+        name="comment_{{ item.id }}"
+        >{{ item.author.username }}</a>
+    </h5>
+    {{ item.text }}
+</div>
+</div>
+
+{% endfor %}
                         </div>
+                        
                 </div>
      </div>
     </div>
+
 </main>
 {% endblock %}

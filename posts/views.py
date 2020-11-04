@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Group, User
+from .models import Post, Group, User, Comment
 from django.views.generic import CreateView
-from users.forms import CreationForm, PostForm
+from users.forms import CreationForm, PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
@@ -32,15 +32,8 @@ def group_post(request, slug):
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    contex = {'group': group, 'page':page,'paginator':paginator}
+    contex = {'group': group, 'page': page, 'paginator': paginator}
     return render(request, "group.html", contex)
-
-
-@login_required(login_url="/auth/login/")
-class PostNew(CreateView):
-    form_class = PostForm
-    success_url = '/'
-    template_name = 'new_post.html'
 
 
 @login_required(login_url="/auth/login/")
@@ -62,20 +55,22 @@ def new_post(request):
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     posts = user.posts.all()
-    paginator = Paginator(posts,5)
+    paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     count = len(posts)
-    context = {'page': page, 'user': user, 'count': count,'paginator':paginator}
+    context = {'page': page, 'user': user,
+               'count': count, 'paginator': paginator}
     return render(request, 'profile.html', context)
 
 
 @login_required(login_url="/auth/login/")
 def post_view(request, username, post_id):
-    user = get_object_or_404(User,username=username)
-    post = get_object_or_404(Post,pk=post_id,author=user)
+    user = get_object_or_404(User, username=username)
+    post = get_object_or_404(Post, pk=post_id, author=user)
     count = len(user.posts.all())
-    context = {'user':user,'post':post,'count':count}
+    comments = post.comments.all()
+    context = {'user': user, 'post': post, 'count': count,'comments':comments}
     return render(request, 'post.html', context)
 
 
@@ -86,9 +81,10 @@ def post_edit(request, username, post_id):
     post = get_object_or_404(Post, pk=post_id, author=profile)
     if request.user != profile:
         return redirect('index')
-    
-    form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
-    
+
+    form = PostForm(request.POST or None,
+                    files=request.FILES or None, instance=post)
+
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -99,18 +95,31 @@ def post_edit(request, username, post_id):
     )
 
 
+def add_comment(request, username, post_id):
+
+    post = get_object_or_404(Post, pk=post_id)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.author = request.user
+        comment.save()
+        return redirect('post', username=username, post_id=post_id)
+    return render(request, 'comment.html', {'form': form})
+
+
 def page_not_found(request, exception):
     return render(
-        request, 
-        "mics/404.html", 
-        {"path": request.path}, 
+        request,
+        "mics/404.html",
+        {"path": request.path},
         status=404)
+
 
 def server_error(request):
     return render(request, "mics/500.html", status=500)
 
-
-    form = PostForm(instance =Post.objects.get(id =post_id))
+    form = PostForm(instance=Post.objects.get(id=post_id))
 
     if username != request.user.username:
         HttpResponse("ERROR")
@@ -122,4 +131,3 @@ def server_error(request):
         return redirect('index')
 
     return render(request, 'edit_post.html', {'form': form})
-

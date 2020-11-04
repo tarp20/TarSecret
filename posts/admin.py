@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post,Group
+from .models import Post,Group,Comment
 # Register your models here.
 
 
@@ -18,3 +18,4 @@ class GroupAdmin(admin.ModelAdmin):
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Group,GroupAdmin)
+admin.site.register(Comment)

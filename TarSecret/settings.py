@@ -26,7 +26,7 @@ SECRET_KEY = '-l76qh4=bt4(ql#514*u2j!u6lg$8t78mmza5986as&x6%2(xm'
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost",
-    "127.0.0.1",]
+                 "127.0.0.1", ]
 
 SITE_ID = 1
 
@@ -139,8 +139,6 @@ LOGIN_REDIRECT_URL = 'index'
 
 
 
-#  подключаем движок filebased.EmailBackend
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-# указываем директорию, в которую будут складываться файлы писем
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")

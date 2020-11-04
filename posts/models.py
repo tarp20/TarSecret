@@ -16,7 +16,7 @@ class Group(models.Model):
 
 
 class Post(models.Model):
-    text = models.TextField( verbose_name="Text")
+    text = models.TextField(verbose_name="Text")
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts')
@@ -26,3 +26,15 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.SET_NULL, related_name='comments',blank=True, null=True)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='commens')
+    text = models.TextField()
+    created = models.DateTimeField('created', auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
