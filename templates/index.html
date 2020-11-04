@@ -24,7 +24,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group ">
                                 
-                                <a class="btn btn-sm text-muted" href="" role="button">Comment</a>
+                                <a class="btn btn-sm text-muted" href="{% url 'post' post.author post.pk %}" role="button">Comment</a>
                                 
                                 {% if user == post.author %}
                                 <a class="btn btn-sm text-muted" href="{% url 'post_edit' post.author post.pk %}" role="request">Edit</a>

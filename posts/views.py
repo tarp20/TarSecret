@@ -29,24 +29,10 @@ def index(request):
 def group_post(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all()
-
-
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-
-    contex = {'group': group, 'page': page, 'paginator': paginator}
-
-
-    paginator = Paginator(posts,5)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    
     contex = {'group': group, 'page':page,'paginator':paginator}
-
-
-
-
     return render(request, "group.html", contex)
 
 
@@ -86,8 +72,11 @@ def profile(request, username):
 
 @login_required(login_url="/auth/login/")
 def post_view(request, username, post_id):
-
-    return render(request, 'post.html', {})
+    user = get_object_or_404(User,username=username)
+    post = get_object_or_404(Post,pk=post_id,author=user)
+    count = len(user.posts.all())
+    context = {'user':user,'post':post,'count':count}
+    return render(request, 'post.html', context)
 
 
 @login_required(login_url="/auth/login/")
