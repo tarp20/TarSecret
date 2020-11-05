@@ -40,6 +40,12 @@
                         Edit
                 </a>
                 {% endif %}
+                {% if request.user == post.author %}
+                <a class="btn btn-sm text-muted" href="{% url 'post_delete' post.author.username post.id %}"
+                       role="button">
+                       Delete
+               </a>
+               {% endif %}
             </div>
 
             <!-- date of publication -->

@@ -103,6 +103,24 @@ def post_edit(request, username, post_id):
     )
 
 @login_required(login_url="/auth/login/")
+def post_delete(request,username,post_id):
+    profile = get_object_or_404(User, username=username)
+    post = get_object_or_404(Post, pk=post_id, author=profile)
+    if request.user == profile:
+        post.delete()
+        return redirect('profile', username= request.user.username )
+    else:
+        return redirect('index')
+    
+        
+    
+    
+
+
+
+
+
+@login_required(login_url="/auth/login/")
 def add_comment(request, username, post_id):
 
     post = get_object_or_404(Post, pk=post_id)

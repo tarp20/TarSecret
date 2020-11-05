@@ -49,7 +49,10 @@ def profile_unfollow(request, username):
     user = get_object_or_404(User, username=username)
     follower = Follow.objects.get(user=request.user,author=user)
     follower.delete()
-    return redirect('index')
+    return redirect('profile', username = username)
+
+
+
 
 
 
