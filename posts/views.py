@@ -4,6 +4,8 @@ from django.views.generic import CreateView
 from users.forms import CreationForm, PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from users.models import Follow
+
 
 from django.http import HttpResponse
 
@@ -33,7 +35,7 @@ def group_post(request, slug):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     contex = {'group': group, 'page': page, 'paginator': paginator}
-    return render(request, "group.html", contex)
+    return render(request, "post/group.html", contex)
 
 
 @login_required(login_url="/auth/login/")
@@ -45,10 +47,10 @@ def new_post(request):
             post.author = request.user
             post.save()
             return redirect('index')
-        return render(request, 'new_post.html', {"form": form})
+        return render(request, 'func/new_post.html', {"form": form})
 
     form = PostForm()
-    return render(request, 'new_post.html', {'form': form})
+    return render(request, 'func/new_post.html', {'form': form})
 
 
 @login_required(login_url="/auth/login/")
@@ -59,19 +61,25 @@ def profile(request, username):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     count = len(posts)
+    follower = Follow.objects.filter(user=user).count()
+    followed = Follow.objects.filter(author=user).count()
+    following = Follow.objects.filter(user=request.user, author=user).exists()
     context = {'page': page, 'user': user,
-               'count': count, 'paginator': paginator}
-    return render(request, 'profile.html', context)
+               'count': count, 'paginator': paginator,'following':following,'follower':follower,'followed':followed}
+    return render(request, 'post/profile.html', context)
 
 
 @login_required(login_url="/auth/login/")
 def post_view(request, username, post_id):
     user = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, pk=post_id, author=user)
+    follower = Follow.objects.filter(user=user).count()
+    followed= Follow.objects.filter(author=user).count()
+
     count = len(user.posts.all())
     comments = post.comments.all()
-    context = {'user': user, 'post': post, 'count': count,'comments':comments}
-    return render(request, 'post.html', context)
+    context = {'user': user, 'post': post, 'count': count,'comments':comments,'follower':follower,'followed':followed }
+    return render(request, 'post/post.html', context)
 
 
 @login_required(login_url="/auth/login/")
@@ -91,10 +99,10 @@ def post_edit(request, username, post_id):
             return redirect("index")
 
     return render(
-        request, 'post_edit.html', {'form': form, 'post': post},
+        request, 'func/post_edit.html', {'form': form, 'post': post},
     )
 
-
+@login_required(login_url="/auth/login/")
 def add_comment(request, username, post_id):
 
     post = get_object_or_404(Post, pk=post_id)
@@ -105,7 +113,7 @@ def add_comment(request, username, post_id):
         comment.author = request.user
         comment.save()
         return redirect('post', username=username, post_id=post_id)
-    return render(request, 'comment.html', {'form': form})
+    return render(request, 'func/comment.html', {'form': form})
 
 
 def page_not_found(request, exception):

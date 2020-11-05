@@ -30,8 +30,8 @@ handler500 = "posts.views.server_error"
 
 urlpatterns = [
     path('', include('posts.urls')),
+    path('',include('users.urls')),
     path('admin/', admin.site.urls),
-    path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
     path('about/', include('django.contrib.flatpages.urls')),
 

@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django import forms
 from posts.models import Post,Comment
+from users.models import Follow
 from django.forms import ModelForm
 
 User = get_user_model()
@@ -35,4 +36,11 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields =['text']
+
+
+class FollowForm(ModelForm):
+    class Meta:
+        model = Follow
+        fields = ['user']
+
 
